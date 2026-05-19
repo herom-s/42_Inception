@@ -1,0 +1,92 @@
+services:
+  nginx:
+    build: requirements/nginx
+    image: nginx:inception
+    container_name: nginx
+    ports:
+        - "${WEB_PORT}:${WEB_PORT}"
+    environment:
+        - NGINX_HOST=${DOMAIN_NAME}
+        - NGINX_PORT=${WEB_PORT}
+    volumes:
+        - ${VOLUME_WORDPRESS}:/var/www/html
+    env_file:
+        - .env
+    networks:
+        - inception_network
+
+  mariadb:
+    build: requirements/mariadb
+    image: mariadb:inception
+    container_name: mariadb
+    expose:
+        - "${DB_PORT}"
+    volumes:
+        - ${VOLUME_MARIADB}:/var/lib/mysql
+    env_file:
+        - .env
+    secrets:
+        - db_name
+        - db_user
+        - db_password
+        - db_root_password
+    networks:
+        - inception_network
+
+  wordpress:
+    build: requirements/wordpress
+    image: wordpress:inception
+    container_name: wordpress
+    expose:
+        - "${WP_PORT}"
+    volumes:
+        - ${VOLUME_WORDPRESS}:/var/www/html
+    depends_on:
+        - mariadb
+        - redis
+    env_file:
+        - .env
+    secrets:
+        - db_name
+        - db_user
+        - db_password
+        - wp_admin_user
+        - wp_admin_password
+        - wp_user
+        - wp_password
+    networks:
+        - inception_network
+  redis:
+    build: requirements/redis
+    image: redis:inception
+    container_name: redis
+    expose:
+      - "${REDIS_PORT}"
+    volumes:
+      - ${VOLUME_REDIS}:/data
+    env_file:
+        - .env
+    networks:
+      - inception_network
+
+secrets:
+  db_name:
+    file: ../secrets/db_name.txt
+  db_user:
+    file: ../secrets/db_user.txt
+  db_password:
+    file: ../secrets/db_password.txt
+  db_root_password:
+    file: ../secrets/db_root_password.txt
+  wp_admin_user:
+    file: ../secrets/wp_admin_user.txt
+  wp_admin_password:
+    file: ../secrets/wp_admin_password.txt
+  wp_user:
+    file: ../secrets/wp_user.txt
+  wp_password:
+    file: ../secrets/wp_password.txt
+
+networks:
+  inception_network:
+    driver: bridge
