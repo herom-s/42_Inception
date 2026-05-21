@@ -8,6 +8,7 @@ volumes:
 	mkdir -p $(VOLUME_MARIADB)
 	mkdir -p $(VOLUME_WORDPRESS)
 	mkdir -p $(VOLUME_REDIS)
+	mkdir -p $(VOLUME_PORTAINER)
 
 build: volumes
 	docker compose -f $(DOCKER_COMPOSE_FILE) build
@@ -26,6 +27,7 @@ fclean:
 	sudo rm -rf $(VOLUME_MARIADB)
 	sudo rm -rf $(VOLUME_WORDPRESS)
 	sudo rm -rf $(VOLUME_REDIS)
+	sudo rm -rf $(VOLUME_PORTAINER)
 
 re: fclean up
 

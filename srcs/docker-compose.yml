@@ -56,6 +56,7 @@ services:
         - wp_password
     networks:
         - inception_network
+
   redis:
     build: requirements/redis
     image: redis:inception
@@ -66,6 +67,58 @@ services:
       - ${VOLUME_REDIS}:/data
     env_file:
         - .env
+    networks:
+      - inception_network
+
+  ftp:
+    build: requirements/ftp
+    image: ftp:inception
+    container_name: ftp
+    ports:
+      - "${FTP_PORT}:${FTP_PORT}"
+      - "21000-21010:21000-21010"
+    volumes:
+      - ${VOLUME_WORDPRESS}:/var/www/html
+    env_file:
+      - .env
+    secrets:
+      - ftp_user
+      - ftp_password
+    networks:
+      - inception_network
+
+  adminer:
+    build: requirements/adminer
+    image: adminer:inception
+    container_name: adminer
+    expose:
+      - "8080"
+    depends_on:
+      - mariadb
+    networks:
+      - inception_network
+
+  static:
+    build: requirements/static
+    image: static:inception
+    container_name: static
+    expose:
+      - "8081"
+    networks:
+      - inception_network
+
+  portainer:
+    build: requirements/portainer
+    image: portainer:inception
+    container_name: portainer
+    expose:
+      - "9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${VOLUME_PORTAINER}:/data
+    secrets:
+      - portainer_password
+      - portainer_user
     networks:
       - inception_network
 
@@ -86,6 +139,14 @@ secrets:
     file: ../secrets/wp_user.txt
   wp_password:
     file: ../secrets/wp_password.txt
+  ftp_user:
+    file: ../secrets/ftp_user.txt
+  ftp_password:
+    file: ../secrets/ftp_password.txt
+  portainer_user:
+    file: ../secrets/portainer_user.txt
+  portainer_password:
+    file: ../secrets/portainer_password.txt
 
 networks:
   inception_network:
