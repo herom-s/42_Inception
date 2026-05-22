@@ -92,9 +92,11 @@ services:
     image: adminer:inception
     container_name: adminer
     expose:
-      - "8080"
+      - "${ADMINER_PORT}"
     depends_on:
       - mariadb
+    env_file:
+      - .env
     networks:
       - inception_network
 
@@ -103,7 +105,9 @@ services:
     image: static:inception
     container_name: static
     expose:
-      - "8081"
+      - "${STATIC_PORT}"
+    env_file:
+      - .env
     networks:
       - inception_network
 
