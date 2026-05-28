@@ -86,8 +86,8 @@ echo "secure_db_password_123" > secrets/db_password.txt
 echo "secure_root_password_456" > secrets/db_root_password.txt
 
 # WordPress Credentials
-echo "inception_admin" > secrets/wp_admin_user.txt
-echo "secure_admin_password_789" > secrets/wp_admin_password.txt
+echo "inception_owner" > secrets/wp_admin_user.txt
+echo "secure_owner_password_789" > secrets/wp_admin_password.txt
 echo "inception_user" > secrets/wp_user.txt
 echo "secure_user_password_000" > secrets/wp_password.txt
 
