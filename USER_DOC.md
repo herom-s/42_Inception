@@ -23,6 +23,7 @@ The Inception infrastructure provides the following services:
 ### 3. Admin Panel (Adminer)
 - **Purpose**: Web-based database management interface
 - **Access**: https://hermarti.42.fr:8080
+- **Architecture**: Lightweight nginx + PHP proxies to WordPress PHP-FPM container
 - **Features**: 
   - Browse and modify database directly
   - Execute SQL queries
@@ -31,6 +32,7 @@ The Inception infrastructure provides the following services:
 ### 4. File Transfer (FTP Server)
 - **Purpose**: Upload and download files to/from the WordPress directory
 - **Access**: Connect via FTP client to `localhost:2121`
+- **Passive Mode**: Ports 21000-21010 (configurable in .env)
 - **Use Cases**: Bulk file uploads, direct file management
 
 ### 5. Static Content Server

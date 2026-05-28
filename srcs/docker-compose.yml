@@ -21,8 +21,8 @@ services:
     image: mariadb:inception
     container_name: mariadb
     restart: on-failure
-    expose:
-        - "${DB_PORT}"
+    ports:
+        - "${DB_PORT}:${DB_PORT}"
     volumes:
         - mariadb_data:/var/lib/mysql
     env_file:
@@ -40,8 +40,8 @@ services:
     image: wordpress:inception
     container_name: wordpress
     restart: on-failure
-    expose:
-        - "${WP_PORT}"
+    ports:
+        - "${WP_PORT}:${WP_PORT}"
     volumes:
         - wordpress_data:/var/www/html
     depends_on:
@@ -65,8 +65,8 @@ services:
     image: redis:inception
     container_name: redis
     restart: on-failure
-    expose:
-      - "${REDIS_PORT}"
+    ports:
+      - "${REDIS_PORT}:${REDIS_PORT}"
     volumes:
       - redis_data:/data
     env_file:
@@ -81,7 +81,6 @@ services:
     restart: on-failure
     ports:
       - "${FTP_PORT}:${FTP_PORT}"
-      - "21000-21010:21000-21010"
     volumes:
       - wordpress_data:/var/www/html
     env_file:
@@ -97,8 +96,8 @@ services:
     image: adminer:inception
     container_name: adminer
     restart: on-failure
-    expose:
-      - "${ADMINER_PORT}"
+    ports:
+      - "${ADMINER_PORT}:${ADMINER_PORT}"
     depends_on:
       - mariadb
     env_file:
@@ -111,8 +110,8 @@ services:
     image: static:inception
     container_name: static
     restart: on-failure
-    expose:
-      - "${STATIC_PORT}"
+    ports:
+      - "${STATIC_PORT}:${STATIC_PORT}"
     env_file:
       - .env
     networks:
@@ -123,11 +122,13 @@ services:
     image: portainer:inception
     container_name: portainer
     restart: on-failure
-    expose:
-      - "9000"
+    ports:
+      - "${PORTAINER_PORT}:${PORTAINER_PORT}"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer_data:/data
+    env_file:
+      - .env
     secrets:
       - portainer_password
       - portainer_user

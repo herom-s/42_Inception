@@ -52,9 +52,12 @@ WEB_PORT=443                    # NGINX HTTPS port
 WP_PORT=9000                    # PHP-FPM internal port
 DB_PORT=3306                    # MariaDB internal port
 FTP_PORT=2121                   # FTP server port
+FTP_PASV_MIN_PORT=21000         # FTP passive mode min port
+FTP_PASV_MAX_PORT=21010         # FTP passive mode max port
 REDIS_PORT=6379                 # Redis internal port
 ADMINER_PORT=8080               # Adminer web port
 STATIC_PORT=8081                # Static site port
+PORTAINER_PORT=9000             # Portainer web port
 
 # Service Configuration
 DOMAIN_NAME=hermarti.42.fr      # Must match /etc/hosts entry
@@ -71,6 +74,11 @@ DOCKER_COMPOSE_FILE=./srcs/docker-compose.yml
 ```
 
 **Note**: All environment variables are exported by the Makefile, making them available to Docker Compose.
+
+**Volumes**: Data is persisted using Docker-managed named volumes with local driver and bind mount options. This ensures:
+- Volumes appear in `docker volume ls` (evaluation requirement)
+- Data is stored in `/home/USER_NAME/data/` paths on host
+- Proper Docker volume management and lifecycle
 
 #### 2. Secret Files (`secrets/`)
 
@@ -329,6 +337,92 @@ df -h /home/hermarti/data/
 
 # Check total size
 du -sh /home/hermarti/data/
+```
+
+## Key Architectural Decisions
+
+### Docker-Managed Volumes
+
+The project uses **Docker-managed named volumes** with the `local` driver instead of simple bind mounts:
+
+```yaml
+volumes:
+  wordpress_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${VOLUME_WORDPRESS}
+```
+
+**Why**: 
+- Volumes appear in `docker volume ls` (evaluation requirement)
+- Data persists in `/home/USER_NAME/data/` paths on host
+- Proper Docker lifecycle management
+- Can be backed up/inspected with `docker volume` commands
+
+**Verification**:
+```bash
+docker volume ls | grep inception
+docker volume inspect inception_wordpress_data
+```
+
+### Adminer Architecture
+
+**Adminer runs nginx only** — PHP execution is delegated to the **WordPress PHP-FPM container** via network proxy:
+
+```nginx
+location ~ \.php$ {
+    fastcgi_pass wordpress:${WP_PORT};  # Network proxy to wordpress service
+}
+```
+
+**Why**:
+- Follows microservices principle (single responsibility)
+- Avoids duplicate PHP-FPM instances
+- Meets subject requirement: "one process per container"
+- Lighter Adminer container
+
+### SSL Certificate Generation at Runtime
+
+**NGINX generates SSL certificates at container startup** using runtime environment variables:
+
+1. `openssl.conf` is a **template** with `${DOMAIN_NAME}` placeholder
+2. **Entrypoint script** substitutes variables at runtime
+3. Certificate is generated if it doesn't exist (persisted in volume)
+
+**Why**:
+- Allows domain name to be configurable via `.env`
+- Certificates automatically match your domain
+- Build-time cert generation would be static/incorrect
+
+**How to regenerate**:
+```bash
+docker volume rm inception_nginx_certs  # Then rebuild
+```
+
+### Port Configuration via .env
+
+**All service ports** are configurable via `.env`:
+
+```bash
+WEB_PORT=443
+WP_PORT=9000
+DB_PORT=3306
+FTP_PORT=2121
+FTP_PASV_MIN_PORT=21000
+FTP_PASV_MAX_PORT=21010
+ADMINER_PORT=8080
+STATIC_PORT=8081
+PORTAINER_PORT=9000
+```
+
+Change ports and recreate containers:
+```bash
+# Edit srcs/.env
+# Then:
+docker compose -f srcs/docker-compose.yml down
+docker compose -f srcs/docker-compose.yml up
 ```
 
 ## Logging and Debugging

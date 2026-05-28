@@ -62,11 +62,17 @@ All services are containerized, isolated, and connected through a dedicated Dock
    make up
    ```
 
-5. **Access the services**:
+5. **Verify volumes are created**:
+   ```bash
+   docker volume ls
+   ```
+   You should see: `inception_wordpress_data`, `inception_mariadb_data`, `inception_redis_data`, `inception_portainer_data`
+
+6. **Access the services**:
    - WordPress: https://hermarti.42.fr
    - Adminer: https://hermarti.42.fr:8080
    - Portainer: https://hermarti.42.fr:9000
-   - FTP: Connect to localhost on port 2121
+   - FTP: Connect to localhost on port 2121 (passive ports 21000-21010)
    - Static Site: https://hermarti.42.fr:8081
 
 ### Common Commands
@@ -87,7 +93,8 @@ make logs            # View container logs in real-time
 - [Docker Official Documentation](https://docs.docker.com/)
 - [Docker Compose Documentation](https://docs.docker.com/compose/)
 - [Docker Best Practices](https://docs.docker.com/develop/dev-best-practices/)
-- [Understanding Volumes and Bind Mounts](https://docs.docker.com/storage/)
+- [Docker Volumes and Drivers](https://docs.docker.com/storage/volumes/)
+- [Named Volumes with Local Driver](https://docs.docker.com/storage/volumes/#use-a-volume-driver)
 - [PID 1 and Daemons in Containers](https://blog.phusion.nl/2015/01/20/docker-and-the-pid-1-zombie-reaping-problem/)
 
 ### NGINX & TLS
