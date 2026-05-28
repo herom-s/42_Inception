@@ -3,6 +3,7 @@ services:
     build: requirements/nginx
     image: nginx:inception
     container_name: nginx
+    restart: on-failure
     ports:
         - "${WEB_PORT}:${WEB_PORT}"
     environment:
@@ -19,6 +20,7 @@ services:
     build: requirements/mariadb
     image: mariadb:inception
     container_name: mariadb
+    restart: on-failure
     expose:
         - "${DB_PORT}"
     volumes:
@@ -37,6 +39,7 @@ services:
     build: requirements/wordpress
     image: wordpress:inception
     container_name: wordpress
+    restart: on-failure
     expose:
         - "${WP_PORT}"
     volumes:
@@ -61,6 +64,7 @@ services:
     build: requirements/redis
     image: redis:inception
     container_name: redis
+    restart: on-failure
     expose:
       - "${REDIS_PORT}"
     volumes:
@@ -74,6 +78,7 @@ services:
     build: requirements/ftp
     image: ftp:inception
     container_name: ftp
+    restart: on-failure
     ports:
       - "${FTP_PORT}:${FTP_PORT}"
       - "21000-21010:21000-21010"
@@ -91,6 +96,7 @@ services:
     build: requirements/adminer
     image: adminer:inception
     container_name: adminer
+    restart: on-failure
     expose:
       - "${ADMINER_PORT}"
     depends_on:
@@ -104,6 +110,7 @@ services:
     build: requirements/static
     image: static:inception
     container_name: static
+    restart: on-failure
     expose:
       - "${STATIC_PORT}"
     env_file:
@@ -115,6 +122,7 @@ services:
     build: requirements/portainer
     image: portainer:inception
     container_name: portainer
+    restart: on-failure
     expose:
       - "9000"
     volumes:
