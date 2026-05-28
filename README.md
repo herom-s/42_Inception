@@ -39,8 +39,8 @@ All services are containerized, isolated, and connected through a dedicated Dock
    echo "inception_user" > secrets/db_user.txt
    echo "secure_password_123" > secrets/db_password.txt
    echo "root_secure_password_456" > secrets/db_root_password.txt
-   echo "admin_user" > secrets/wp_admin_user.txt
-   echo "admin_password_789" > secrets/wp_admin_password.txt
+   echo "owner_user" > secrets/wp_admin_user.txt
+   echo "owner_password_789" > secrets/wp_admin_password.txt
    echo "wordpress_user" > secrets/wp_user.txt
    echo "wordpress_password_000" > secrets/wp_password.txt
    echo "ftp_user" > secrets/ftp_user.txt
