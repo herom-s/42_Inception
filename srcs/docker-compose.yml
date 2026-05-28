@@ -10,7 +10,7 @@ services:
         - NGINX_HOST=${DOMAIN_NAME}
         - NGINX_PORT=${WEB_PORT}
     volumes:
-        - ${VOLUME_WORDPRESS}:/var/www/html
+        - wordpress_data:/var/www/html
     env_file:
         - .env
     networks:
@@ -24,7 +24,7 @@ services:
     expose:
         - "${DB_PORT}"
     volumes:
-        - ${VOLUME_MARIADB}:/var/lib/mysql
+        - mariadb_data:/var/lib/mysql
     env_file:
         - .env
     secrets:
@@ -43,7 +43,7 @@ services:
     expose:
         - "${WP_PORT}"
     volumes:
-        - ${VOLUME_WORDPRESS}:/var/www/html
+        - wordpress_data:/var/www/html
     depends_on:
         - mariadb
         - redis
@@ -68,7 +68,7 @@ services:
     expose:
       - "${REDIS_PORT}"
     volumes:
-      - ${VOLUME_REDIS}:/data
+      - redis_data:/data
     env_file:
         - .env
     networks:
@@ -83,7 +83,7 @@ services:
       - "${FTP_PORT}:${FTP_PORT}"
       - "21000-21010:21000-21010"
     volumes:
-      - ${VOLUME_WORDPRESS}:/var/www/html
+      - wordpress_data:/var/www/html
     env_file:
       - .env
     secrets:
@@ -127,7 +127,7 @@ services:
       - "9000"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ${VOLUME_PORTAINER}:/data
+      - portainer_data:/data
     secrets:
       - portainer_password
       - portainer_user
@@ -159,6 +159,32 @@ secrets:
     file: ../secrets/portainer_user.txt
   portainer_password:
     file: ../secrets/portainer_password.txt
+
+volumes:
+  wordpress_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${VOLUME_WORDPRESS}
+  mariadb_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${VOLUME_MARIADB}
+  redis_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${VOLUME_REDIS}
+  portainer_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${VOLUME_PORTAINER}
 
 networks:
   inception_network:
