@@ -81,6 +81,7 @@ services:
     restart: on-failure
     ports:
       - "${FTP_PORT}:${FTP_PORT}"
+      - "${FTP_PASV_MIN_PORT}-${FTP_PASV_MAX_PORT}:${FTP_PASV_MIN_PORT}-${FTP_PASV_MAX_PORT}"
     volumes:
       - wordpress_data:/var/www/html
     env_file:
@@ -98,8 +99,11 @@ services:
     restart: on-failure
     ports:
       - "${ADMINER_PORT}:${ADMINER_PORT}"
+    volumes:
+      - wordpress_data:/var/www/html
     depends_on:
       - mariadb
+      - wordpress
     env_file:
       - .env
     networks:
