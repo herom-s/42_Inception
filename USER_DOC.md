@@ -68,8 +68,8 @@ Before running the project for the first time, you need to:
    echo "SecureRootPass456!" > /home/hermarti/Projects/42_Inception/secrets/db_root_password.txt
    
    # WordPress admin credentials
-   echo "admin_user" > /home/hermarti/Projects/42_Inception/secrets/wp_admin_user.txt
-   echo "AdminPass789!" > /home/hermarti/Projects/42_Inception/secrets/wp_admin_password.txt
+   echo "owner_user" > /home/hermarti/Projects/42_Inception/secrets/wp_admin_user.txt
+   echo "OwnerPass789!" > /home/hermarti/Projects/42_Inception/secrets/wp_admin_password.txt
    
    # WordPress secondary user
    echo "blog_user" > /home/hermarti/Projects/42_Inception/secrets/wp_user.txt
