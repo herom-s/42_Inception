@@ -15,7 +15,7 @@ envsubst '$WP_PORT' < /etc/php82/php-fpm.d/www.conf.template > /etc/php82/php-fp
 
 # Loop check: Wait cleanly until MariaDB server is active and accessible via port 3306
 echo "Checking MariaDB communication channel..."
-while ! nc -z mariadb 3306; do
+while ! nc -z mariadb ${DB_PORT}; do
     echo "Waiting for MariaDB network socket to open..."
     sleep 2
 done
@@ -31,7 +31,7 @@ if [ ! -f "wp-config.php" ]; then
         --dbname="${SQL_DATABASE}" \
         --dbuser="${SQL_USER}" \
         --dbpass="${SQL_PASSWORD}" \
-        --dbhost="mariadb:3306" \
+        --dbhost="mariadb:${DB_PORT}" \
         --allow-root
 
     echo "Executing standard WordPress core installation routine..."
