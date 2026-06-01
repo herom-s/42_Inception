@@ -57,10 +57,10 @@ FTP_PASV_MAX_PORT=21010         # FTP passive mode max port
 REDIS_PORT=6379                 # Redis internal port
 ADMINER_PORT=8080               # Adminer web port
 STATIC_PORT=8081                # Static site port
-PORTAINER_PORT=9000             # Portainer web port
+PORTAINER_PORT=9001             # Portainer web port
 
 # Service Configuration
-DOMAIN_NAME=hermarti.42.fr      # Must match /etc/hosts entry
+DOMAIN_NAME=${USER_NAME}$.42.fr      # Must match /etc/hosts entry
 REDIS_HOST=redis                # Service name in docker-compose
 
 # Volume Paths (where data persists on host)
@@ -414,7 +414,7 @@ FTP_PASV_MIN_PORT=21000
 FTP_PASV_MAX_PORT=21010
 ADMINER_PORT=8080
 STATIC_PORT=8081
-PORTAINER_PORT=9000
+PORTAINER_PORT=9001
 ```
 
 Change ports and recreate containers:

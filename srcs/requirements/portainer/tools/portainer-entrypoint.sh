@@ -4,7 +4,9 @@ set -e
 PORTAINER_USER=$(cat /run/secrets/portainer_user)
 PORTAINER_PASSWORD=$(cat /run/secrets/portainer_password)
 
-/usr/local/bin/portainer --no-analytics -H unix:///var/run/docker.sock &
+/usr/local/bin/portainer --no-analytics \
+    -H unix:///var/run/docker.sock \
+    --bind :${PORTAINER_PORT} &
 PORTAINER_PID=$!
 
 echo "Waiting for Portainer to start..."
