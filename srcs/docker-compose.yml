@@ -21,8 +21,6 @@ services:
     image: mariadb:inception
     container_name: mariadb
     restart: on-failure
-    ports:
-        - "${DB_PORT}:${DB_PORT}"
     volumes:
         - mariadb_data:/var/lib/mysql
     env_file:
@@ -40,8 +38,6 @@ services:
     image: wordpress:inception
     container_name: wordpress
     restart: on-failure
-    ports:
-        - "${WP_PORT}:${WP_PORT}"
     volumes:
         - wordpress_data:/var/www/html
     depends_on:
@@ -65,8 +61,6 @@ services:
     image: redis:inception
     container_name: redis
     restart: on-failure
-    ports:
-      - "${REDIS_PORT}:${REDIS_PORT}"
     volumes:
       - redis_data:/data
     env_file:
@@ -79,9 +73,6 @@ services:
     image: ftp:inception
     container_name: ftp
     restart: on-failure
-    ports:
-      - "${FTP_PORT}:${FTP_PORT}"
-      - "${FTP_PASV_MIN_PORT}-${FTP_PASV_MAX_PORT}:${FTP_PASV_MIN_PORT}-${FTP_PASV_MAX_PORT}"
     volumes:
       - wordpress_data:/var/www/html
     env_file:
@@ -97,8 +88,6 @@ services:
     image: adminer:inception
     container_name: adminer
     restart: on-failure
-    ports:
-      - "${ADMINER_PORT}:${ADMINER_PORT}"
     volumes:
       - wordpress_data:/var/www/html
     depends_on:
@@ -114,8 +103,6 @@ services:
     image: static:inception
     container_name: static
     restart: on-failure
-    ports:
-      - "${STATIC_PORT}:${STATIC_PORT}"
     env_file:
       - .env
     networks:
@@ -126,8 +113,6 @@ services:
     image: portainer:inception
     container_name: portainer
     restart: on-failure
-    ports:
-      - "${PORTAINER_PORT}:${PORTAINER_PORT}"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer_data:/data
